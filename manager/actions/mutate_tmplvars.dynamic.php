@@ -7,8 +7,7 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if(isset($_REQUEST['id'])) $id = (int) $_REQUEST['id'];
-else                       $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
@@ -21,12 +20,6 @@ $rs = $modx->db->select('username',$modx->getFullTableName('active_users'),"acti
 			$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template variable'));
 	}
 // end check for lock
-
-// make sure the id's a number
-if(!is_numeric($id))
-{
-    $modx->webAlertAndQuit($_lang["error_id_nan"]);
-}
 
 global $content;
 $content = array();
@@ -56,6 +49,24 @@ if(is_array($evtOut)) $RTEditors = implode(',',$evtOut);
 
 ?>
 <script language="JavaScript">
+
+function check_toggle() {
+    var el =  document.getElementsByName("template[]");
+    var count = el.length;             
+    for(i=0;i<count;i++) el[i].checked = !el[i].checked; 
+};
+
+function check_none() {
+    var el =  document.getElementsByName("template[]");
+    var count = el.length;             
+    for(i=0;i<count;i++) el[i].checked = false; 
+};
+
+function check_all() {
+    var el =  document.getElementsByName("template[]");
+    var count = el.length;             
+    for(i=0;i<count;i++) el[i].checked = true; 
+};
 
 function duplicaterecord(){
     if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
@@ -239,31 +250,32 @@ function decode(s){
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="a" value="302">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
-<input type="hidden" name="params" value="<?php echo htmlspecialchars($content['display_params']);?>">
+<input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']);?>">
 
 	<h1><?php echo $_lang['tmplvars_title']; ?></h1>
 
     <div id="actions">
-    	  <ul class="actionButtons">
-    		  <li id="Button1">
-    			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
-    			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
-    			</a><span class="plus"> + </span>
-    			<select id="stay" name="stay">
-    			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-    			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
-    			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
-    			</select>		
-    		  </li>
-    		  <?php
-    			if ($_GET['a'] == '301') { ?>
-    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
-    		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } else { ?>
-    		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } ?>	
-    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-    	  </ul>
+          <ul class="actionButtons">
+              <li id="Button1">
+                <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
+                  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+                </a>
+                <span class="plus"> + </span>
+                <select id="stay" name="stay">
+                  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
+                  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+                  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
+                </select>        
+              </li>
+          <?php if ($_GET['a'] == '300') { ?>
+              <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+              <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } else { ?>
+              <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+              <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } ?>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          </ul>
     </div>
 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -279,16 +291,16 @@ function decode(s){
 <table>
   <tr>
     <th><?php echo $_lang['tmplvars_name']; ?>:</th>
-    <td>[*&nbsp;<input name="name" type="text" maxlength="50" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">*]&nbsp; <span class="warning" id='savingMessage'>&nbsp;</span></td>
+    <td>[*&nbsp;<input name="name" type="text" maxlength="50" value="<?php echo $modx->htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">*]&nbsp; <span class="warning" id='savingMessage'>&nbsp;</span></td>
   </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_caption']; ?>:</th>
-    <td><input name="caption" type="text" maxlength="80" value="<?php echo htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+    <td><input name="caption" type="text" maxlength="80" value="<?php echo $modx->htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
   </tr>
 
   <tr>
     <th><?php echo $_lang['tmplvars_description']; ?>:</th>
-    <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
+    <td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
   </tr>
   <tr>
     <th><?php echo $_lang['existing_category']; ?>:</th>
@@ -297,7 +309,7 @@ function decode(s){
         <?php
             include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
             foreach(getCategories() as $n=>$v){
-                echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+                echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".$modx->htmlspecialchars($v["category"])."</option>";
             }
         ?>
         </select>
@@ -318,34 +330,47 @@ function decode(s){
   <tr>
     <th><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</th>
     <td><select name="type" size="1" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
-	            <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
-	            <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
-	            <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
-	            <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea (deprecated)</option>
-	            <option value="textareamini" <?php  echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
-	            <option value="richtext" <?php  echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
-	            <option value="dropdown" <?php  echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
-	            <option value="listbox" <?php   echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
-	            <option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
-	            <option value="option" <?php    echo ($content['type']=='option')? "selected='selected'":""; ?>>Radio Options</option>
-	            <option value="checkbox" <?php  echo ($content['type']=='checkbox')? "selected='selected'":""; ?>>Check Box</option>
-	            <option value="image" <?php     echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
-	            <option value="file" <?php      echo ($content['type']=='file')? "selected='selected'":""; ?>>File</option>
-	            <option value="url" <?php       echo ($content['type']=='url')? "selected='selected'":""; ?>>URL</option>
-	            <option value="email" <?php     echo ($content['type']=='email')? "selected='selected'":""; ?>>Email</option>
-	            <option value="number" <?php    echo ($content['type']=='number')? "selected='selected'":""; ?>>Number</option>
-	            <option value="date" <?php      echo ($content['type']=='date')? "selected='selected'":""; ?>>Date</option>
-	            <option value="custom_tv" <?php      echo ($content['type']=='custom_tv')? "selected='selected'":""; ?>>Custom Input</option>
+	            <optgroup label="Standard Type">
+                    <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
+                    <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
+                    <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
+                    <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea (deprecated)</option>
+                    <option value="textareamini" <?php  echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
+                    <option value="richtext" <?php  echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
+                    <option value="dropdown" <?php  echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
+                    <option value="listbox" <?php   echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
+                    <option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
+                    <option value="option" <?php    echo ($content['type']=='option')? "selected='selected'":""; ?>>Radio Options</option>
+                    <option value="checkbox" <?php  echo ($content['type']=='checkbox')? "selected='selected'":""; ?>>Check Box</option>
+                    <option value="image" <?php     echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
+                    <option value="file" <?php      echo ($content['type']=='file')? "selected='selected'":""; ?>>File</option>
+                    <option value="url" <?php       echo ($content['type']=='url')? "selected='selected'":""; ?>>URL</option>
+                    <option value="email" <?php     echo ($content['type']=='email')? "selected='selected'":""; ?>>Email</option>
+                    <option value="number" <?php    echo ($content['type']=='number')? "selected='selected'":""; ?>>Number</option>
+                    <option value="date" <?php      echo ($content['type']=='date')? "selected='selected'":""; ?>>Date</option>
+                </optgroup>
+                <optgroup label="Custom Type">
+                    <option value="custom_tv" <?php  echo ($content['type']=='custom_tv')? "selected='selected'":""; ?>>Custom Input</option>
+                    <?php 
+                        $custom_tvs = scandir(MODX_BASE_PATH.'assets/tvs'); 
+                        foreach($custom_tvs as $ctv) {
+                            if(strpos($ctv, '.')!==0 && $ctv !='index.html'){
+                                $selected = ($content['type']=='custom_tv:'.$ctv )? "selected='selected'":"";
+                                echo '<option value="custom_tv:'.$ctv.'"  '.$selected.'>'.$ctv.'</option>';
+                            }
+                        }    
+                    ?>
+               </optgroup>
 	        </select>
     </td>
   </tr>
   <tr>
 	<th><?php echo $_lang['tmplvars_elements']; ?>:  </th>
-	<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
+	<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</th>
-    <td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
+    <td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</th>
@@ -389,6 +414,7 @@ function decode(s){
 <div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
+    <p><a href="#" onClick="check_all();return false;"><?php echo $_lang['check_all']; ?></a> <a href="#" onClick="check_none();return false;"><?php echo $_lang['check_none']; ?></a> <a href="#" onClick="check_toggle(); return false;"><?php echo $_lang['check_toggle']; ?></a></p>
 	<style type="text/css">
 		label {display:block;}
 	</style>

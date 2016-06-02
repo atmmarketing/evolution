@@ -3,7 +3,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.2
+ Version: 2.0.4
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -23,24 +23,32 @@ class Wayfinder {
 	var $debugInfo = array();
 	
 	function __construct() {
-		$_[] = '[+wf.wrapper+]';
-		$_[] = '[+wf.classes+]';
-		$_[] = '[+wf.classnames+]';
-		$_[] = '[+wf.link+]';
-		$_[] = '[+wf.title+]';
-		$_[] = '[+wf.linktext+]';
-		$_[] = '[+wf.id+]';
-		$_[] = '[+wf.alias+]';
-		$_[] = '[+wf.attributes+]';
-		$_[] = '[+wf.docid+]';
-		$_[] = '[+wf.introtext+]';
-		$_[] = '[+wf.description+]';
-		$_[] = '[+wf.subitemcount+]';
-		$this->placeHolders['rowLevel'] = $_;
-		$this->placeHolders['wrapperLevel'] = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]');
-		$this->placeHolders['tvs']          = array();
-		
-	}
+        $this->placeHolders = array(
+            'rowLevel' => array(
+                '[+wf.wrapper+]',
+                '[+wf.classes+]',
+                '[+wf.classnames+]',
+                '[+wf.link+]',
+                '[+wf.title+]',
+                '[+wf.linktext+]',
+                '[+wf.id+]',
+                '[+wf.alias+]',
+                '[+wf.attributes+]',
+                '[+wf.docid+]',
+                '[+wf.introtext+]',
+                '[+wf.description+]',
+                '[+wf.subitemcount+]',
+		'[+wf.iterator+]'
+            ),
+            'wrapperLevel' => array(
+                '[+wf.wrapper+]',
+                '[+wf.classes+]',
+                '[+wf.classnames+]',
+                '[+wf.level+]'
+            ),
+            'tvs' => array()
+        );
+    }
 	
 	function run() {
 		global $modx;
@@ -114,7 +122,7 @@ class Wayfinder {
 			$docInfo['hasChildren'] = in_array($docInfo['id'],$this->hasChildren) ? 1 : 0;
 			$numChildren = $docInfo['hasChildren'] ? count($this->docs[$level+1][$docInfo['id']]) : 0;
 			//Render the row output
-			$subMenuOutput .= $this->renderRow($docInfo,$numChildren);
+			$subMenuOutput .= $this->renderRow($docInfo,$numChildren,$counter);
 			//Update counter for last check
 			$counter++;
 		}
@@ -135,10 +143,10 @@ class Wayfinder {
 				$wrapperClass = 'outercls';
 			}
 			//Get the class names for the wrapper
-			$classNames = $this->setItemClass($wrapperClass);
+			$classNames = $this->setItemClass($wrapperClass, 0, 0, 0, $level);
 			$useClass = ($classNames) ? " class=\"{$classNames}\"" : '';
 			
-			$phArray = array($subMenuOutput,$useClass,$classNames);
+			$phArray = array($subMenuOutput,$useClass,$classNames,$level);
 			//Process the wrapper
 			$subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
 			//Debug
@@ -158,9 +166,38 @@ class Wayfinder {
 	}
 	
 	//render each rows output
-    function renderRow(&$resource,$numChildren) {
+    function renderRow(&$resource,$numChildren,$curNum) {
         global $modx;
         $output = '';
+
+        // Determine fields for use from referenced resource
+        if ($this->_config['useReferenced'] && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
+         if ($this->_config['useReferenced']=="id") {
+          // if id only, do not need get referenced data
+          $resource["id"] = $resource['content'];
+         } else if($referenced = $modx->getDocument($resource['content'])){
+          if (in_array($this->_config['useReferenced'],explode(",","1,*"))) { 
+           $this->_config['useReferenced'] = array_keys($resource);
+          }
+          if (!is_array($this->_config['useReferenced'])) {
+           $this->_config['useReferenced'] = preg_split("/[\s,]+/", $this->_config['useReferenced']);
+          }
+          $this->_config['useReferenced'] = array_diff($this->_config['useReferenced'],explode(",","content,parent,isfolder"));
+
+          foreach ($this->_config['useReferenced'] as $field) {
+           if (isset($referenced[$field])) $resource[$field] = $referenced[$field];
+           switch ($field) {
+            case "linktext" :
+             $resource['linktext'] = $resource[(empty($resource[$this->_config['textOfLinks']])) ? 'pagetitle' : $this->_config['textOfLinks']];
+             break;
+            case "title" :
+             $resource['title'] = $resource[$this->_config['titleOfLinks']];
+             break;
+           }
+          }
+         }
+        }
+
 		//Determine which template to use
         if ($this->_config['displayStart'] && $resource['level'] == 0) {
 			$usedTemplate = 'startItemTpl';
@@ -191,6 +228,8 @@ class Wayfinder {
             $usedTemplate = 'parentRowTpl';
         } elseif ($resource['level'] > 1 && $this->_templates['innerRowTpl']) {
             $usedTemplate = 'innerRowTpl';
+	} elseif ($resource['last'] && $this->_templates['lastRowTpl']) {
+            $usedTemplate = 'lastRowTpl';
         } else {
             $usedTemplate = 'rowTpl';
         }
@@ -214,21 +253,22 @@ class Wayfinder {
 		} else {
 			$phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
 		}
+	//add iterator in phArray
+	$phArray[] = $curNum;
+        $usePlaceholders = $this->placeHolders['rowLevel'];
         //Add document variables to the placeholder array
         foreach ($resource as $dvName => $dvVal) {
-            $this->placeHolders['rowLevel'][] = "[+".$dvName."+]";
+            $usePlaceholders[] = '[+' . $dvName . '+]';
             $phArray[] = $dvVal;
         }
-		//If tvs are used add them to the placeholder array
-		if (!empty($this->tvList)) {
-			$usePlaceholders = array_merge($this->placeHolders['rowLevel'],$this->placeHolders['tvs']);
-			foreach ($this->tvList as $tvName) {
-				$phArray[] = $resource[$tvName];
-			}
-		} else {
-			$usePlaceholders = $this->placeHolders['rowLevel'];
-		}
-		//Debug
+        //If tvs are used add them to the placeholder array
+        if (!empty($this->tvList)) {
+            $usePlaceholders = array_merge($usePlaceholders, $this->placeHolders['tvs']);
+            foreach ($this->tvList as $tvName) {
+                $phArray[] = $resource[$tvName];
+            }
+        }
+        //Debug
 		if ($this->_config['debug']) {
 			$debugDocInfo = array();
 			$debugDocInfo['template'] = $usedTemplate;
@@ -254,10 +294,20 @@ class Wayfinder {
             //Set outer class if specified
             $returnClass .= $this->_css['outer'];
             $hasClass = 1;
-        } elseif ($classType === 'innercls' && !empty($this->_css['inner'])) {
-            //Set inner class if specified
-            $returnClass .= $this->_css['inner'];
-            $hasClass = 1;
+        } elseif ($classType === 'innercls') {
+
+            if ( !empty($this->_css['inner'])) {
+                //Set inner class if specified
+                $returnClass .= $this->_css['inner'];
+                $hasClass = 1;
+            }
+
+            //Set level class if specified
+            if (!empty($this->_css['outerLevel'])) {
+                $returnClass .= $hasClass ? ' ' . $this->_css['outerLevel'] . $level : $this->_css['outerLevel'] . $level;
+                $hasClass = 1;
+            }
+
         } elseif ($classType === 'rowcls') {
             //Set row class if specified
             if (!empty($this->_css['row'])) {
@@ -442,7 +492,7 @@ class Wayfinder {
 				$resultIds[] = $tempDocInfo['id'];
 				//Create the link
 				$linkScheme = $this->_config['fullLink'] ? 'full' : '';
-				if ($this->_config['useWeblinkUrl'] !== 'FALSE' && $tempDocInfo['type'] == 'reference') {
+				if ($this->_config['useWeblinkUrl'] && $tempDocInfo['type'] == 'reference') {
 					if (is_numeric($tempDocInfo['content'])) {
 						$tempDocInfo['link'] = $modx->makeUrl(intval($tempDocInfo['content']),'','',$linkScheme);
 					} else {

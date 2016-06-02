@@ -9,17 +9,17 @@
  * @required    MODX 0.9.6.3+
  *              CodeMirror  3.13 : pl
  *
- * @confirmed   MODX Evolution 1.10.0
+ * @confirmed   MODX Evolution 1.0.15
  *
  * @author      Mihanik71 
  *
  * @see         https://github.com/Mihanik71/CodeMirror-MODx
  */
-global $content;
+global $content, $which_editor;
 $textarea_name = 'post';
 $mode = 'htmlmixed';
 $lang = 'htmlmixed';
-$object_id = md5($evt->name.'-'.$content[id]);
+$object_id = md5($evt->name.'-'.$content['id']);
 /*
  * Default Plugin configuration
  */
@@ -28,9 +28,9 @@ $indentUnit             = (isset($indentUnit)               ? $indentUnit       
 $tabSize                = (isset($tabSize)                  ? $tabSize                  : 4);
 $lineWrapping           = (isset($lineWrapping)             ? $lineWrapping             : false);
 $matchBrackets          = (isset($matchBrackets)            ? $matchBrackets            : false);
-$activeLine           	= (isset($activeLine)             	? $activeLine            	: false);
-$emmet					= (($emmet == 'true')? 	'<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>' 	: "");
-$search					= (($search == 'true')? '<script src="'.$_CM_URL.'cm/search-compressed.js"></script>' 	: "");
+$activeLine           	= (isset($activeLine)               ? $activeLine            	: false);
+$emmet			= (($emmet == 'true')? 	'<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>' 	: "");
+$search			= (($search == 'true')? '<script src="'.$_CM_URL.'cm/search-compressed.js"></script>' 	: "");
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
@@ -43,8 +43,10 @@ $xrte   = $content['richtext'];
 switch($modx->Event->name) {
     case 'OnTempFormRender'   :
         $object_name = $content['templatename'];
-    case 'OnChunkFormRender'  :
         $rte   = ($prte ? $prte : 'none');
+        break;
+    case 'OnChunkFormRender'  :
+        $rte   = isset($which_editor) ? $which_editor : 'none';
         break;
 
     case 'OnDocFormRender'    :
@@ -151,10 +153,7 @@ if (('none' == $rte) && $mode) {
 						stream.eat("]");
 						return "modxConfig";
 					}
-					if (stream.match("&")) {
-						while ((ch = stream.next()) != null)
-							if (ch == "=") break;
-						stream.eat("=");
+					if (stream.match(/&([^\s;]+;)?([^\s=]+=)?/)) {
 						return "attribute";
 					}
 					if (stream.match("!]")) {
@@ -180,7 +179,7 @@ if (('none' == $rte) && $mode) {
 			lineWrapping: {$lineWrapping},
 			gutters: ["CodeMirror-linenumbers", "breakpoints"],
 			styleActiveLine: {$activeLine},
-			indentWithTabs: true,
+			indentWithTabs: {$indentWithTabs},
 			extraKeys:{
 				"Ctrl-Space": function(cm){
 					var n = cm.getCursor().line;
@@ -230,8 +229,8 @@ if (('none' == $rte) && $mode) {
 			myCodeMirror.hasFocus();
 		}
 		if (localStorage["history_{$object_id}"] !== undefined){
-			var history = JSON.parse(localStorage["history_{$object_id}"]);
-			myCodeMirror.doc.setHistory(history);
+			var cmHistory = JSON.parse(localStorage["history_{$object_id}"]);
+			myCodeMirror.doc.setHistory(cmHistory);
 		}
 		// add event
 		myCodeMirror.on("gutterClick", function(cm, n) {
@@ -240,8 +239,8 @@ if (('none' == $rte) && $mode) {
 			cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker("+"));
 		});
 		myCodeMirror.on("change", function(cm, n) {
-			var history = myCodeMirror.doc.getHistory();
-			localStorage['history_{$object_id}'] = JSON.stringify(history);
+			var cmHistory = myCodeMirror.doc.getHistory();
+			localStorage['history_{$object_id}'] = JSON.stringify(cmHistory);
 			documentDirty=true;
 		});
 

@@ -1,6 +1,6 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-# eForm 1.4.5 - Electronic Form Snippet
+# eForm 1.4.6 - Electronic Form Snippet
 # Original created by Raymond Irving 15-Dec-2004.
 # Version 1.3+ extended by Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -32,7 +32,7 @@ if(isset($eformOnBeforeFormParse)) $eFormOnBeforeFormParse = $eformOnBeforeFormP
 if(isset($eFormCSS)) $cssStyle = $eFormCSS;
 
 # Snippet customize settings
-$params = array (
+$_params = array (
    // Snippet Path
    'snipPath' => $snipPath, //includes $snipFolder
 	 'snipFolder' => $snipFolder,
@@ -87,17 +87,20 @@ $params = array (
    'autoSenderName' => isset($autoSenderName)?$autoSenderName:'',
    'attachmentField' => isset($attachmentField)?$attachmentField:'',
    'attachmentPath' => isset($attachmentPath)?$attachmentPath:'',
-   'version' => '1.4.5'
+   'errorTpl' => isset($errorTpl)?$errorTpl:'<div class="errors"><strong>[+ef_message_text+]</strong><br />[+ef_wrapper+]</div>',
+   'errorRequiredTpl' => isset($errorRequiredTpl)?$errorRequiredTpl:'<span class="requiredlist"><span>[+ef_required_list+]</span>.</span>',
+   'errorRequiredSeparator' => isset($errorRequiredSeparator)?$errorRequiredSeparator:'</span>, <span>',
+   'version' => '1.4.6'
 );
 
 // pixelchutes PHx workaround
-foreach( $params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
+foreach( $_params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
 
 # Start processing
 
 include_once ($snipPath."eform.inc.php");
 
-$output = eForm($modx,$params);
+$output = eForm($modx,array_merge($params,$_params));
 
 # Return
 return $output;

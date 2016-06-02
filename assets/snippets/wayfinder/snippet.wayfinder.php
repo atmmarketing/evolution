@@ -4,7 +4,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.2
+ Version: 2.0.4
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -61,6 +61,8 @@ $wf->_config = array(
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
 	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
+	// for local references - use original document fields separated by comma (useful for set active if it is current, titles, link attr, etc)
+	'useReferenced' => isset($useReferenced) ? $useReferenced: "id", 
 	'hereId' => isset($hereId) ? intval($hereId) : $modx->documentIdentifier
 );
 
@@ -73,6 +75,7 @@ $wf->_css = array(
 	'row' => isset($rowClass) ? $rowClass : '',
 	'outer' => isset($outerClass) ? $outerClass : '',
 	'inner' => isset($innerClass) ? $innerClass : '',
+	'outerLevel' => isset($outerLevelClass) ? $outerLevelClass: '',
 	'level' => isset($levelClass) ? $levelClass: '',
 	'self' => isset($selfClass) ? $selfClass : '',
 	'weblink' => isset($webLinkClass) ? $webLinkClass : '',
@@ -91,6 +94,7 @@ $wf->_templates = array(
 	'activeParentRowTpl' => isset($activeParentRowTpl) ? $activeParentRowTpl : '',
 	'categoryFoldersTpl' => isset($categoryFoldersTpl) ? $categoryFoldersTpl : '',
 	'startItemTpl' => isset($startItemTpl) ? $startItemTpl : '',
+	'lastRowTpl' => isset($lastRowTpl) ? $lastRowTpl : '',
 );
 
 //Process Wayfinder

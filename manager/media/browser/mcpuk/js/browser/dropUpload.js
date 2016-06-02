@@ -4,19 +4,15 @@
   *
   *      @desc Upload files using drag and drop
   *   @package KCFinder
-  *   @version 2.51
+  *   @version 2.54
   *    @author Forum user (updated by Pavel Tzonkov)
-  * @copyright 2010, 2011 KCFinder Project
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
   */?>
-var already = false;
+
 browser.initDropUpload = function() {
-	if (already){
-      return;
-   }
-   already = true;
     if ((typeof(XMLHttpRequest) == 'undefined') ||
         (typeof(document.addEventListener) == 'undefined') ||
         (typeof(File) == 'undefined') ||
@@ -68,7 +64,7 @@ browser.initDropUpload = function() {
             browser.alert("Cannot write to upload folder.");
             return false;
         }
-        filesCount += e.dataTransfer.files.length;
+        filesCount += e.dataTransfer.files.length
         for (var i = 0; i < e.dataTransfer.files.length; i++) {
             var file = e.dataTransfer.files[i];
             file.thisTargetDir = browser.dir;
@@ -197,7 +193,6 @@ browser.initDropUpload = function() {
                     if (browser.dir == reader.thisTargetDir)
                         browser.fadeFiles();
                     uploadInProgress = false;
-					already = true;
                     processUploadQueue();
                     if (xhr.responseText.substr(0, 1) != '/')
                         errors[errors.length] = xhr.responseText;
@@ -209,7 +204,6 @@ browser.initDropUpload = function() {
             reader.onerror = function(evt) {
                 $('#loading').css('display', 'none');
                 uploadInProgress = false;
-				already = true;
                 processUploadQueue();
                 errors[errors.length] = browser.label("Failed to upload {filename}!", {
                     filename: evt.target.thisFileName
@@ -222,10 +216,11 @@ browser.initDropUpload = function() {
             filesCount = 0;
             var loop = setInterval(function() {
                 if (uploadInProgress) return;
+                boundary = '------multipartdropuploadboundary' + (new Date).getTime();
+                uploadQueue = [];
                 clearInterval(loop);
                 if (currentFile.thisTargetDir == browser.dir)
                     browser.refresh();
-                boundary = '------multipartdropuploadboundary' + (new Date).getTime();
                 if (errors.length) {
                     browser.alert(errors.join('\n'));
                     errors = [];

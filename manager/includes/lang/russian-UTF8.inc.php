@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Russian MODX community
  * @author gabdullin
@@ -861,6 +861,10 @@ $_lang["search_criteria_content"] = 'Искать в содержимом';
 $_lang["search_criteria_content_msg"] = 'Найти все ресурсы, содержащие введенный текст в своем теле.';
 $_lang["search_criteria_id"] = 'Искать по ID';
 $_lang["search_criteria_id_msg"] = 'Введите ID ресурса, чтобы быстро найти его.';
+$_lang["search_criteria_top"] = 'Искать по Основным полям';
+$_lang["search_criteria_top_msg"] = 'ID, Заголовок, Расширенный заголовок, Псевдоним';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Искать в расширенных заголовках';
 $_lang["search_criteria_longtitle_msg"] = 'Найти все ресурсы, содержащие текст в расширенных заголовках.';
 $_lang["search_criteria_title"] = 'Искать в заголовках';
@@ -1192,6 +1196,7 @@ $_lang['email_method_mail'] = 'MAIL - cообщения отправляются
 $_lang['email_method_smtp'] = 'Через SMTP-сервер';
 $_lang['smtp_auth_title'] = 'SMTP авторизация';
 $_lang['smtp_host_title'] = 'Адрес SMTP-сервера';
+$_lang['smtp_secure_title'] = 'Защита SMTP';
 $_lang['smtp_username_title'] = 'SMTP почта';
 $_lang['smtp_password_title'] = 'SMTP пароль';
 $_lang['smtp_port_title'] = 'SMTP порт';
@@ -1212,6 +1217,8 @@ $_lang["cache_type_1"] = 'Только с учетом ID (стандартны�
 $_lang["cache_type_2"] = 'C учетом ID и $_GET';
 $_lang["seostrict_title"] = 'Использовать SEO Strict URLs';
 $_lang["seostrict_message"] = 'использование strict URLs удаляет дубли страниц по разным ссылкам';
+$_lang["aliaslistingfolder_title"] = 'Использовать масив AliasListing только для Папок';
+$_lang["aliaslistingfolder_message"] = 'Уменьшает потребление памяти и ускоряет работу сайта при большом количестве документов';
 
 $_lang["settings_friendlyurls_alert"] = 'Для использования дружественных URL, необходимо сменить имя файла ht.access в папке, в которую установлен MODX, на .htaccess.';
 $_lang["settings_friendlyurls_alert2"] = 'При установке MODX в подпапку необходимо внести изменения в файл .htaccess.';
@@ -1259,4 +1266,17 @@ $_lang["login_processor_wrong_password"]     = "Неверно указан ло
 $_lang["login_processor_many_failed_logins"] = "Очень много неудачных попыток войти, вы заблокированы!";
 $_lang["login_processor_blocked1"]           = "Вы заблокированы и не можете войти!";
 $_lang["login_processor_blocked2"]           = "Вы заблокированы и не можете войти! Попробуйте войти позже.";
+$_lang["login_processor_blocked3"]           = "You are blocked automatic after a specified date and you cannot log in anymore!";
 $_lang["login_processor_bad_code"]           = "Проверочный код введен не правильно! Попробуйте еще раз!";
+$_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back to your IP!";
+$_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
+$_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
+$_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']";
+$_lang["dp_monthNames"] = "['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Включить все";
+$_lang["check_none"] = "Выключить все";
+$_lang["check_toggle"] = "Переключить";

@@ -37,9 +37,7 @@ switch ($_REQUEST['a']) {
 }
 
 
-if (isset($_REQUEST['id']))
-        $id = (int)$_REQUEST['id'];
-else    $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
 $tbl_active_users               = $modx->getFullTableName('active_users');
@@ -99,6 +97,13 @@ if (!empty ($id)) {
     $_SESSION['itemname'] = $content['pagetitle'];
 } else {
     $content = array();
+    
+    if (isset($_REQUEST['newtemplate'])){
+    	$content['template'] = $_REQUEST['newtemplate'];
+    }else{
+    	$content['template'] = getDefaultTemplate();
+    }
+    
     $_SESSION['itemname'] = $_lang["new_resource"];
 }
 
@@ -148,8 +153,11 @@ if (isset ($_POST['which_editor'])) {
 window.addEvent('domready', function(){
     var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
     var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat});
-    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat});
+    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
+    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
+    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
+    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
+    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
 
     if( !window.ie6 ) {
         $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
@@ -484,12 +492,14 @@ function decode(s) {
 /* ]]> */
 </script>
 
-<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php">
+<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php" onsubmit="documentDirty=false;">
 <?php
 // invoke OnDocFormPrerender event
 $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
-    'id' => $id
+    'id' => $id,
+	'template' => $content['template']
 ));
+
 if (is_array($evtOut))
     echo implode('', $evtOut);
 	
@@ -518,22 +528,23 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
           <li id="Button1">
             <a href="#" class="primary" onclick="documentDirty=false; document.mutate.save.click();">
               <img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
-            </a><span class="plus"> + </span>
+            </a>
+            <span class="plus"> + </span>
             <select id="stay" name="stay">
-              <?php if ($modx->hasPermission('new_document')) { ?>
+      <?php if ($modx->hasPermission('new_document')) { ?>
               <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-              <?php } ?>
+      <?php } ?>
               <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
               <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
             </select>
           </li>
-          <?php
-            if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') { ?>
-          <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
-          <?php } else { ?>
+      <?php if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') { ?>
+          <li id="Button6" class="disabled"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
+          <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
+      <?php } else { ?>
           <li id="Button6"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
-          <?php } ?>
+      <?php } ?>
           <li id="Button4"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           <li id="Button5"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img alt="icons_preview_resource" src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
       </ul>
@@ -549,6 +560,14 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
     </script>
 
     <!-- General -->
+    <?php
+        $evtOut = $modx->invokeEvent('OnDocFormTemplateRender', array(
+            'id' => $id
+        ));
+        if (is_array($evtOut)) {
+            echo implode('', $evtOut);
+        } else {
+    ?>
     <div class="tab-page" id="tabGeneral">
         <h2 class="tab"><?php echo $_lang['settings_general']?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabGeneral" ) );</script>
@@ -586,7 +605,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     <option value="0">(blank)</option>
 <?php
                 $rs = $modx->db->select(
-					"t.templatename, t.id, c.category",
+					"t.templatename, t.selectable, t.id, c.category",
 					"{$tbl_site_templates} AS t
 						LEFT JOIN {$tbl_categories} AS c ON t.category = c.id",
 					'',
@@ -594,6 +613,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 					);
                 $currentCategory = '';
                 while ($row = $modx->db->getRow($rs)) {
+                    if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; }; // Skip if not selectable but show if selected!
                     $thisCategory = $row['category'];
                     if($thisCategory == null) {
                         $thisCategory = $_lang["no_category"];
@@ -605,17 +625,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
                         $closeOptGroup = true;
                     }
-                    if (isset($_REQUEST['newtemplate'])) {
-                        $selectedtext = $row['id'] == $_REQUEST['newtemplate'] ? ' selected="selected"' : '';
-                    } else {
-                        if (isset ($content['template'])) {
-                            $selectedtext = $row['id'] == $content['template'] ? ' selected="selected"' : '';
-                        } else {
-                            $default_template = getDefaultTemplate();
-                            $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
-                            $content['template'] = $default_template;
-                        }
-                    }
+                    
+                    $selectedtext = ($row['id'] == $content['template']) ? ' selected="selected"' : '';
+                    
                     echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
                     $currentCategory = $thisCategory;
                 }
@@ -628,12 +640,17 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 <td><input name="menutitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['menutitle']))?>" class="inputBox" onchange="documentDirty=true;" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_menu_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
             <tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['resource_opt_menu_index']?></span></td>
-                <td><table border="0" cellspacing="0" cellpadding="0" style="width:333px;"><tr>
-                    <td><input name="menuindex" type="text" maxlength="6" value="<?php echo $content['menuindex']?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;" /><input type="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />
-                    &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_menu_index_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
-                    <td align="right" style="text-align:right;"><span class="warning"><?php echo $_lang['resource_opt_show_menu']?></span>&nbsp;<input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu']==1) ? 1 : 0?>" />
-                    &nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_show_menu_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
-                </tr></table></td></tr>
+                <td>
+                    <input name="menuindex" type="text" maxlength="6" value="<?php echo $content['menuindex']?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;" /><input type="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />
+                    &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_menu_index_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
+                    </td>
+                </tr>
+            <tr style="height: 24px;">
+              <td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['resource_opt_show_menu']?></span></td>
+                <td><input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu']==1) ? 1 : 0?>" />
+                    &nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_show_menu_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
+                    </td>
+                </tr>
 
             <tr><td colspan="2"><div class="split"></div></td></tr>
 
@@ -761,7 +778,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
                         // post back value
                         if(array_key_exists('tv'.$row['id'], $_POST)) {
-                            if($row['type'] == 'listbox-multiple') {
+                            if(is_array($_POST['tv'.$row['id']])) {
                                 $tvPBV = implode('||', $_POST['tv'.$row['id']]);
                             } else {
                                 $tvPBV = $_POST['tv'.$row['id']];
@@ -800,13 +817,13 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
         <?php $mx_can_pub = $modx->hasPermission('publish_document') ? '' : 'disabled="disabled" '; ?>
             <tr style="height: 24px;">
-                <td><span class="warning"><?php echo $_lang['resource_opt_published']?></span></td>
+                <td width="150"><span class="warning"><?php echo $_lang['resource_opt_published']?></span></td>
                 <td><input <?php echo $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : ''?> onclick="changestate(document.mutate.published);" />
                 <input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0?>" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_published_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
             </tr>
             <tr style="height: 24px;">
-                <td><span class="warning"><?php echo $_lang['page_data_publishdate']?></span></td>
+                <td width="150"><span class="warning"><?php echo $_lang['page_data_publishdate']?></span></td>
                 <td><input id="pub_date" <?php echo $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])?>" onblur="documentDirty=true;" />
                 <a href="javascript:void(0);" onclick="javascript:document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand;">
                 <img src="<?php echo $_style["icons_cal_nodate"] ?>" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']?>" /></a>
@@ -818,7 +835,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 <td style="color: #555;font-size:10px"><em> <?php echo $modx->config['datetime_format']; ?> HH:MM:SS</em></td>
             </tr>
             <tr style="height: 24px;">
-                <td><span class="warning"><?php echo $_lang['page_data_unpublishdate']?></span></td>
+                <td width="150"><span class="warning"><?php echo $_lang['page_data_unpublishdate']?></span></td>
                 <td><input id="unpub_date" <?php echo $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])?>" onblur="documentDirty=true;" />
                 <a onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
                 <img src="<?php echo $_style["icons_cal_nodate"] ?>" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']?>" /></a>
@@ -837,7 +854,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby']) {
 ?>
-            <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_type']?></span></td>
+            <tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['resource_type']?></span></td>
                 <td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
 
                     <option value="document"<?php echo (($content['type'] == "document" || $_REQUEST['a'] == '85' || $_REQUEST['a'] == '4') ? ' selected="selected"' : "");?> ><?php echo $_lang["resource_type_webpage"];?></option>
@@ -845,7 +862,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
                     </select>
                     &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_type_message']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
-            <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_contentType']?></span></td>
+            <tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['page_data_contentType']?></span></td>
                 <td><select name="contentType" class="inputBox" onchange="documentDirty=true;" style="width:200px">
             <?php
                 if (!$content['contentType'])
@@ -858,7 +875,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
             ?>
                 </select>
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_contentType_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-            <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_opt_contentdispo']?></span></td>
+            <tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['resource_opt_contentdispo']?></span></td>
                 <td><select name="content_dispo" size="1" onchange="documentDirty=true;" style="width:200px">
                     <option value="0"<?php echo !$content['content_dispo'] ? ' selected="selected"':''?>><?php echo $_lang['inline']?></option>
                     <option value="1"<?php echo $content['content_dispo']==1 ? ' selected="selected"':''?>><?php echo $_lang['attachment']?></option>
@@ -895,7 +912,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
             </tr>
 
 <tr style="height: 24px;">
-<td><span class="warning">
+<td width="150"><span class="warning">
 <?php echo $_lang['resource_opt_alvisibled']?>
 </span></td>
 <td>
@@ -904,7 +921,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
 </td></tr>
 
             <tr style="height: 24px;">
-                <td><span class="warning"><?php echo $_lang['resource_opt_richtext']?></span></td>
+                <td width="150"><span class="warning"><?php echo $_lang['resource_opt_richtext']?></span></td>
                 <td><input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']=='27' ? '' : "checked"?> onclick="changestate(document.mutate.richtext);" />
                 <input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']=='27' ? 0 : 1?>" onchange="documentDirty=true;" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_richtext_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
@@ -915,24 +932,25 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_trackvisit_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
             </tr>
             <tr style="height: 24px;">
-                <td><span class="warning"><?php echo $_lang['page_data_searchable']?></span></td>
+                <td width="150"><span class="warning"><?php echo $_lang['page_data_searchable']?></span></td>
                 <td><input name="searchablecheck" type="checkbox" class="checkbox" <?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? "checked" : ''?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? 1 : 0?>" onchange="documentDirty=true;" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_searchable_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
             </tr>
             <tr style="height: 24px;">
-                <td><span class="warning"><?php echo $_lang['page_data_cacheable']?></span></td>
+                <td width="150"><span class="warning"><?php echo $_lang['page_data_cacheable']?></span></td>
                 <td><input name="cacheablecheck" type="checkbox" class="checkbox" <?php echo (isset($content['cacheable']) && $content['cacheable']==1) || (!isset($content['cacheable']) && $cache_default==1) ? "checked" : ''?> onclick="changestate(document.mutate.cacheable);" />
                 <input type="hidden" name="cacheable" value="<?php echo (isset($content['cacheable']) && $content['cacheable']==1) || (!isset($content['cacheable']) && $cache_default==1) ? 1 : 0?>" onchange="documentDirty=true;" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_cacheable_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
             </tr>
             <tr style="height: 24px;">
-                <td><span class="warning"><?php echo $_lang['resource_opt_emptycache']?></span></td>
+                <td width="150"><span class="warning"><?php echo $_lang['resource_opt_emptycache']?></span></td>
                 <td><input name="syncsitecheck" type="checkbox" class="checkbox" checked="checked" onclick="changestate(document.mutate.syncsite);" />
                 <input type="hidden" name="syncsite" value="1" />
                 &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_emptycache_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
             </tr>
         </table>
     </div><!-- end #tabSettings -->
+    <?php } ?>
 
 <?php if ($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta']) {
     // get list of site keywords
@@ -1157,8 +1175,10 @@ if ($use_udperms == 1) {
 
 // invoke OnDocFormRender event
 $evtOut = $modx->invokeEvent('OnDocFormRender', array(
-    'id' => $id,
+	'id' => $id,
+	'template' => $content['template']
 ));
+
 if (is_array($evtOut)) echo implode('', $evtOut);
 ?>
 </div><!--div class="tab-pane" id="documentPane"-->

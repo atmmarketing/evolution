@@ -44,9 +44,12 @@ if($modx->event->name==='OnBeforePluginFormSave' || $modx->event->name==='OnBefo
             $has_filebinding = '0';
         elseif(!empty($filebinding))
         {
-            $has_filebinding = '1';
             $elm_path = "assets/{$elm_name}/{$filebinding}";
-            $insert_code = $modx->db->escape("{$include} MODX_BASE_PATH.'{$elm_path}';");
+            $pInfo = pathinfo(MODX_BASE_PATH.$elm_path);
+            if(is_dir($pInfo['dirname'])) {
+                $has_filebinding = '1';
+                $insert_code = $modx->db->escape("{$include} MODX_BASE_PATH.'{$elm_path}';");
+            };
         }
         else $has_filebinding = '0';
     }
@@ -70,7 +73,7 @@ switch ($modx->event->name)
         {
             $content['file_binding'] = str_replace(array(';','\''),'',trim(substr(trim($content[$vals]),$count,250)));
             $elm_path = "assets/{$elm_name}/" . $content['file_binding'];
-            $content[$vals] = file_get_contents(MODX_BASE_PATH . $elm_path);
+            $content[$vals] = is_readable(MODX_BASE_PATH . $elm_path) ? file_get_contents(MODX_BASE_PATH . $elm_path) : 'File not found: '.$elm_path;
             // strip out PHP tags (from save_snippet.processor.php)
             if ( strncmp($content[$vals], '<?', 2) == 0 )
             {
@@ -86,7 +89,7 @@ switch ($modx->event->name)
         {
             $content['file_binding'] = str_replace(';','',trim(substr(trim($content[$vals]),7,250)));
             $elm_path = "assets/{$elm_name}/" . $content['file_binding'];
-            $content[$vals] = file_get_contents(MODX_BASE_PATH . $elm_path);
+            $content[$vals] = is_readable(MODX_BASE_PATH . $elm_path) ? file_get_contents(MODX_BASE_PATH . $elm_path) : 'File not found: '.$elm_path;
             // strip out PHP tags (from save_snippet.processor.php)
             if ( strncmp($content[$vals], '<?', 2) == 0 )
             {
@@ -108,7 +111,7 @@ switch ($modx->event->name)
 mE1   = new Element("tr");
 mE11  = new Element("th",{"align":"left","styles":{"padding-top":"14px"}});
 mE12  = new Element("td",{"align":"left","styles":{"padding-top":"14px"}});
-mE122 = new Element("input",{"name":"filebinding","type":"text","maxlength":"45","value":"'.$content['file_binding'].'","class":"inputBox","styles":{"width":"300px"},"events":{"change":function(){documentDirty=true;}}});
+mE122 = new Element("input",{"name":"filebinding","type":"text","maxlength":"75","value":"'.$content['file_binding'].'","class":"inputBox","styles":{"width":"300px"},"events":{"change":function(){documentDirty=true;}}});
 
 mE11.appendText("' . _lang('Static file path') . ':");
 mE11.inject(mE1);

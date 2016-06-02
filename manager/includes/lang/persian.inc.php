@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Mohsen Zare (MotSmart), www.modxcms.ir
  *
@@ -841,7 +841,7 @@ $_lang["role_web_user_management"] = 'مدیریت کاربر وب';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'URL منبع آخرین اخبار مادایکس.';
 $_lang["rss_url_news_title"] = 'RSS اخبار';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'URL منبع اخبار امنیتی.';
 $_lang["rss_url_security_title"] = 'RSS امنیتی';
 $_lang["run_module"] = 'اجرای ماژول';
@@ -856,6 +856,8 @@ $_lang["search_criteria_content"] = 'جستجو در محتوا';
 $_lang["search_criteria_content_msg"] = 'جستجوی متنی در بین همه پرونده ها و محتویاتی که شامل متن مورد نظر شماست';
 $_lang["search_criteria_id"] = 'جستجو از طریق شناسه یا ردیف';
 $_lang["search_criteria_id_msg"] = 'شناسه یا ردیف پرونده مورد نظر خود را وارد کنید تا به سرعت پرونده را پیدا کنید';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'جستجو در عنوان بلند مطالب';
 $_lang["search_criteria_longtitle_msg"] = 'پیدا کردن کلیه ی پرونده هایی که حاوی متن مورد نظر در عنوان بلند خود هستند';
 $_lang["search_criteria_title"] = 'جستجو در عناوین';
@@ -1192,6 +1194,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';
@@ -1259,4 +1262,17 @@ $_lang["login_processor_wrong_password"]     = "Incorrect username or password e
 $_lang["login_processor_many_failed_logins"] = "Due to too many failed logins, you have been blocked!";
 $_lang["login_processor_blocked1"]           = "You are blocked and cannot log in!";
 $_lang["login_processor_blocked2"]           = "You are blocked and cannot log in! Please try again later.";
+$_lang["login_processor_blocked3"]           = "You are blocked automatic after a specified date and you cannot log in anymore!";
 $_lang["login_processor_bad_code"]           = "The security code you entered didn't validate! Please try to login again!";
+$_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back to your IP!";
+$_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
+$_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
+$_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Select all";
+$_lang["check_none"] = "Select none";
+$_lang["check_toggle"] = "Toggle selection";

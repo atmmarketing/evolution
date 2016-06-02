@@ -5,7 +5,7 @@
  * @author Grégory Pakosz (guardian)
  * @author Coroico
  * @author Jean-Christophe Brebion (Fairytree)
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language French
@@ -52,6 +52,7 @@ $_lang["checking_registerglobals"] = 'Vérification que Register_Globals est sur
 $_lang["checking_registerglobals_note"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/attaques/cross-site-scripting.php3">XCSS</a> (Cross Site Scripting). Consultez votre hébergeur sur la marche à suivre pour désactiver ce réglage, en général par l\'une de ces trois solutions: modifier le fichier php.ini global, ajouter des règles dans le fichier .htaccess à la racine de votre installation MODX, ou ajouter un fichier php.ini personnalisé pour neutraliser l\'ensemble des fichiers dans chacun des répertoires de votre installation (et il y en a beaucoup). Vous pouvez continuez l\installation de MODX, mais considérez vous comme averti.';
 $_lang["checking_sessions"] = 'Vérifications des paramètres de sessions: ';
 $_lang["checking_table_prefix"] = 'Vérification du préfixe de table `';
+$_lang["choose_language"] = 'Choisissez la langue';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Lors des installations Linux/Unix, veuillez créer un nouveau fichier nommé <span class=\"mono\">config.inc.php</span> dans le répertoire <span class=\"mono\">[+MGR_DIR+]/includes/</span> avec les droits d\'accès 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
@@ -83,14 +84,14 @@ $_lang["database_use_failed"] = 'Impossible d\'accéder à la base de données!'
 $_lang["database_use_failed_note"] = 'Veuillez vérifier les droits d\'accès utilisateur à la base de données et réessayez.';
 $_lang["default_language"] = 'Langue par défaut du Gestionnaire';
 $_lang["default_language_description"] = 'Ceci est la langue par défaut qui sera utilisée dans l\'interface d\'administration de votre Gestionnaire de Contenu MODX.';
-$_lang["depedency_create"] = 'Depedency created';
-$_lang["depedency_update"] = 'Depedency updated';
+$_lang["depedency_create"] = 'Dépendance créée';
+$_lang["depedency_update"] = 'Dépendance mise à jour';
 $_lang["during_execution_of_sql"] = ' lors de l\'exécution de la requête SQL ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'erreur';
 $_lang["errors"] = 'erreurs';
 $_lang["failed"] = 'ECHEC!';
-$_lang["guid_set"] = 'GUID set';
+$_lang["guid_set"] = 'GUID sauvé';
 $_lang["help"] = 'Aide!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Aide à l\'installation sur les forums de MODX';
@@ -115,10 +116,10 @@ $_lang["installing_demo_site"] = 'Installation du site de démonstration: ';
 $_lang["language_code"] = 'fr';
 $_lang["loading"] = 'Chargement...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2014 le projet de Framework de Gestion de Contenu <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a>. Tous droits réservés. MODX est publié sous la licence GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] le projet de Framework de Gestion de Contenu <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a>. Tous droits réservés. MODX est publié sous la licence GNU GPL.';
 $_lang["modx_footer2"] = 'MODX est un logiciel libre. Nous vous encourageons à être créatifs et à utiliser MODX comme bon il vous semble. Votre seule obligation est de redistribuer sous licence libre votre version modifiée de MODX.';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
-$_lang["modx_requires_php"] = ', alors que MODX nécessite PHP 5.0.0 ou supérieur';
+$_lang["modx_requires_php"] = ', alors que MODX requiert PHP 5.3 ou supérieure';
 $_lang["mysql_5051"] = ' la version serveur de MySQL est 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Il existe plusieurs problèmes avec la version MySQL 5.0.51. Il est recommandé de mettre à jour votre version de MySQL avant de continuer.';
 $_lang["mysql_version_is"] = ' Votre version de MySQL est: ';

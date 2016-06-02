@@ -152,6 +152,7 @@ defined('IN_PARSER_MODE') or die();
             unset($_SESSION['webUsrConfigSet']);
             unset($_SESSION['webUserGroupNames']);
             unset($_SESSION['webDocgroups']);
+            unset($_SESSION['webDocgrpNames']);
         }
         else {
             // Unset all of the session variables.
@@ -184,8 +185,8 @@ defined('IN_PARSER_MODE') or die();
 
 # process login
 
-    $username = $modx->db->escape(htmlspecialchars($_POST['username'], ENT_QUOTES));
-    $givenPassword = $modx->db->escape($_POST['password']);
+    $username = $modx->db->escape(htmlspecialchars($_POST['username'], ENT_NOQUOTES, $modx->config['modx_charset']));
+    $givenPassword = htmlspecialchars($_POST['password'], ENT_NOQUOTES, $modx->config['modx_charset']);
     $captcha_code = isset($_POST['captcha_code'])? $_POST['captcha_code']: '';
     $rememberme = $_POST['rememberme'];
 
@@ -209,18 +210,23 @@ defined('IN_PARSER_MODE') or die();
     }
 
     $internalKey             = $row['internalKey'];
+<<<<<<< HEAD
     $dbasePassword             = $row['password'];
     $failedlogins             = $row['failedlogincount'];
+=======
+    $dbasePassword           = $row['password'];
+    $failedlogins            = $row['failedlogincount'];
+>>>>>>> modxcms/master
     $blocked                 = $row['blocked'];
     $blockeduntildate        = $row['blockeduntil'];
     $blockedafterdate        = $row['blockedafter'];
-    $registeredsessionid    = $row['sessionid'];
+    $registeredsessionid     = $row['sessionid'];
     $role                    = $row['role'];
-    $lastlogin                = $row['lastlogin'];
+    $lastlogin               = $row['lastlogin'];
     $nrlogins                = $row['logincount'];
     $fullname                = $row['fullname'];
-    //$sessionRegistered         = checkSession();
-    $email                     = $row['email'];
+    //$sessionRegistered     = checkSession();
+    $email                   = $row['email'];
 
     // load user settings
     if($internalKey){
@@ -316,11 +322,10 @@ defined('IN_PARSER_MODE') or die();
 
     if(isset($newloginerror) && $newloginerror==1) {
         $failedlogins += $newloginerror;
-        if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block!
+        if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block until!
 			$modx->db->update(
 				array(
 					'failedlogincount' => $failedlogins,
-					'blocked'          => 1,
 					'blockeduntil'     => (time()+($modx->config['blocked_minutes']*60)),
 					),
 				$modx->getFullTableName('web_user_attributes'),

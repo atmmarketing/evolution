@@ -41,7 +41,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                         'class' => $params['class'],
                         'src' => $src,
                         'id' => ($params['id'] ? $params['id'] : ''),
-                        'alt' => htmlspecialchars($params['alttext']),
+                        'alt' => $modx->htmlspecialchars($params['alttext']),
                         'style' => $params['style']
                     );
                     if(isset($params['align']) && $params['align'] != 'none') {
@@ -75,6 +75,9 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
 
         case "date":
             if ($value !='' || $params['default']=='Yes') {
+				if (empty($value)) {
+					$value = 'now';
+				}
                 $timestamp = getUnixtimeFromDateString($value);
                 $p = $params['format'] ? $params['format']:"%A %d, %B %Y";
                 $o = strftime($p,$timestamp);
@@ -164,7 +167,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                     // setup the link attributes
                     $attr = array(
                         'href' => $url,
-                        'title' => $params['title'] ? htmlspecialchars($params['title']) : $name,
+                        'title' => $params['title'] ? $modx->htmlspecialchars($params['title']) : $name,
                         'class' => $params['class'],
                         'style' => $params['style'],
                         'target' => $params['target'],
@@ -173,7 +176,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                     $attributes .= ' '.$params['attrib']; // add extra
 
                     // Output the link
-                    $o .= '<a'.rtrim($attributes).'>'. ($params['text'] ? htmlspecialchars($params['text']) : $name) .'</a>';
+                    $o .= '<a'.rtrim($attributes).'>'. ($params['text'] ? $modx->htmlspecialchars($params['text']) : $name) .'</a>';
                 }
             }
             break;
@@ -207,7 +210,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             $h = $params['h']? $params['h']:'400px';
             $richtexteditor = $params['edt']? $params['edt']: "";
             $o = '<div class="MODX_RichTextWidget"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
-            $o.= htmlspecialchars($value);
+            $o.= $modx->htmlspecialchars($value);
             $o.= '</textarea></div>';
             $replace_richtext = array($id);
             // setup editors
@@ -366,7 +369,7 @@ function decodeParamValue($s){
 // returns an array if a delimiter is present. returns array is a recordset is present
 function parseInput($src, $delim="||", $type="string", $columns=true) { // type can be: string, array
 	global $modx;
-    if (is_resource($src)) {
+    if ($modx->db->isResult($src)) {
         // must be a recordset
         $rows = array();
         while ($cols = $modx->db->getRow($src,'num')) $rows[] = ($columns)? $cols : implode(" ",$cols);

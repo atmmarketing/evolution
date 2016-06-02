@@ -3,10 +3,10 @@
  * MODX Installer language file
  *
  * @author davaeron
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
- * @language Dutch
+ * @language English
  * @package modx
  * @subpackage installer
  *
@@ -50,6 +50,7 @@ $_lang["checking_registerglobals"] = 'Kijken of Register_Globals uit staat gesch
 $_lang["checking_registerglobals_note"] = 'Deze configuratie maakt uw site veel gevoeliger voor Site Scripting (XSS) Cross aanvallen. U moet uw host informeren over het uitschakelen van deze instelling, meestal door een van de drie manieren: het wijzigen van de globale php.ini bestand, het toevoegen van regels om een .htaccess bestand in de root van je MODX installatie, of het toevoegen van aangepaste php.ini bestanden. Elke map op uw installatie (en er zijn er veel van hen). U zult nog steeds in staat zijn om MODX installeren, maar beschouw jezelf gewaarschuwd.';
 $_lang["checking_sessions"] = 'Controleren of sessies correct zijn geconfigureerd:';
 $_lang["checking_table_prefix"] = 'Controleren tabel voorvoegsel `';
+$_lang["choose_language"] = 'Kies Taal';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Voor nieuwe Linux / Unix installaties, maak een leeg bestand met de naam <span class="mono">config.inc.php</span> in de <span class="mono">/[+ MGR_DIR +]/includes/</span> map met permissie ingesteld op 0666.';
 $_lang["connection_screen_collation"] = 'Collatie:';
@@ -92,7 +93,7 @@ $_lang["guid_set"] = 'GUID set';
 $_lang["help"] = 'Help!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Hulp bij installeren via in de MODX forums';
-$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</ a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
+$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
 $_lang["install"] = 'Installeer';
 $_lang["install_overwrite"] = 'Installeer/Overschrijven';
 $_lang["install_results"] = 'Installatie resultaten';
@@ -113,10 +114,10 @@ $_lang["installing_demo_site"] = 'Installeer demo site:';
 $_lang["language_code"] = 'en';
 $_lang["loading"] = 'Laden...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2014 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</ a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] - <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is gratis software. Wij raden u aan om creatief te zijn en gebruik te maken van MODX op je eigen manier. Maar zorg ervoor dat als je wijzigingen uitvoert, dat je de broncode vrij houdt!';
 $_lang["modx_install"] = 'MODX &raquo; Installeren';
-$_lang["modx_requires_php"] = ', en MODX heeft PHP 5.0.0 of nieuwer nodig';
+$_lang["modx_requires_php"] = ', en MODX heeft minimaal PHP 5.3 versie nodig';
 $_lang["mysql_5051"] = 'MySQL server versie is 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Er zijn bekende problemen met MySQL 5.0.51. Het wordt aanbevolen dat u een upgrade uitvoert voordat u verder gaat.';
 $_lang["mysql_version_is"] = 'Uw MySQL versie is:';

@@ -32,7 +32,7 @@ $dcfg['extract'] = '1:content,description,introtext,tv_value';
 $dcfg['extractLength'] = 200;
 $dcfg['extractEllips'] = '...';
 $dcfg['extractSeparator'] = '<br />';
-$dcfg['formatDate'] = 'd/m/y : H:i:s';
+$dcfg['formatDate'] = str_replace('%','',$modx->toDateFormat(null,'formatOnly')) . ' : H:i:s';
 $dcfg['highlightResult'] = 1;
 $dcfg['pagingType'] = 1;
 $dcfg['showPagingAlways'] = 0;
@@ -79,5 +79,3 @@ $dcfg['jsJquery'] = 'assets/js/jquery.min.js';
 
 // For a global parameter initialisation use the following syntax $__param = 'value';
 // To overwrite parameter snippet call use $param = 'value';
-
-?>

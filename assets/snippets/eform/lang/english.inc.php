@@ -5,7 +5,7 @@
  * Language:       English
  * Encoding:       UTF-8
  * Translated by:  -
- * Date:           2014/02/24
+ * Date:           2014/06/13
  */
 $_lang["ef_date_format"] = "%d-%b-%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug info: ";
@@ -24,6 +24,7 @@ $_lang["ef_failed_upload"] = "Incorrect file type.";
 $_lang["ef_failed_vericode"] = "Invalid verification code.";
 $_lang["ef_invalid_date"] = " is not a valid date";
 $_lang["ef_invalid_email"] = " is not a valid email address";
+$_lang["ef_invalid_phone"] = "Invalid values in the phone number";
 $_lang["ef_invalid_number"] = " is not a valid number";
 $_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Form template set to id of page containing snippet call! You can not have the form in the same document as the snippet call.</span> id=";
 $_lang["ef_mail_abuse_error"] = "<strong>Invalid or insecure entries were detected in your form.</strong>";
@@ -33,7 +34,7 @@ $_lang["ef_mail_error"] = "Mailer was unable to send mail";
 $_lang["ef_multiple_submit"] = "<p>This form was already submitted succesfully. There is no need to submit your information multiple times.</p>";
 $_lang["ef_no_doc"] = "Resource or Chunk not found for template id=";
 $_lang["ef_regex_error"] = "error in regular expression ";
-$_lang["ef_required_message"] = " The following required field(s) are missing: {fields}<br />";
+$_lang["ef_required_message"] = "The following required field(s) are missing: [+fields+]";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Failed</span> using rule [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Passed using rule [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " silently passed validation. <span style=\"color:red;\"> SQL returned no result!</span> ";
@@ -43,6 +44,6 @@ $_lang["ef_thankyou_message"] = "<h3>Thank You!</h3><p>Your information was succ
 $_lang["ef_thousands_separator"] = "";
 $_lang["ef_upload_error"] = ": error in uploading file.";
 $_lang["ef_upload_exceeded"] = " has exceeded maximum upload limit.";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Some errors were detected in your form:</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_validation_message"] = "Some errors were detected in your form:";
 $_lang["ef_version_error"] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;[+version+]) is different from the included eForm file (version:&nbsp;[+fileVersion+]). Please make sure you use the same version for both.";
 ?>

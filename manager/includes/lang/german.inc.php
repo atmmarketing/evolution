@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Rainer Bachmaier
  * @author Marc Hinse
@@ -845,7 +845,7 @@ $_lang["role_web_user_management"] = 'Web-Benutzerverwaltung';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'URL des MODX-News-Feeds eintragen.';
 $_lang["rss_url_news_title"] = 'RSS-News-Feed';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'URL des MODX-Security-Feeds eintragen.';
 $_lang["rss_url_security_title"] = 'RSS-Security-Feed';
 $_lang["run_module"] = 'Modul starten';
@@ -860,6 +860,8 @@ $_lang["search_criteria_content"] = 'Suche im Inhalt';
 $_lang["search_criteria_content_msg"] = 'Findet alle Ressource in deren Inhalt der eingegebene Text vorkommt.';
 $_lang["search_criteria_id"] = 'Suche nach ID';
 $_lang["search_criteria_id_msg"] = 'Findet die Ressource dessen ID mit der eingegebenen übereinstimmt.';
+$_lang["search_criteria_template_id"] = 'Suche nach Template ID';
+$_lang["search_criteria_template_id_msg"] = 'Findet alle Ressourcen die das Template mit der angegebenen ID benutzen.';
 $_lang["search_criteria_longtitle"] = 'Suche nach Langtitel';
 $_lang["search_criteria_longtitle_msg"] = 'Findet alle Ressource in deren Langtitel der eingegebene Text vorkommt.';
 $_lang["search_criteria_title"] = 'Suche nach Titel';
@@ -1196,6 +1198,7 @@ $_lang['email_method_mail'] = 'PHP mail() Funktion';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP Auth';
 $_lang['smtp_host_title'] = 'SMTP Host';
+$_lang['smtp_secure_title'] = 'SMTP Verschlüsselung';
 $_lang['smtp_username_title'] = 'SMTP Benutzername';
 $_lang['smtp_password_title'] = 'SMTP Passwort';
 $_lang['smtp_port_title'] = 'SMTP Port';
@@ -1269,3 +1272,11 @@ $_lang["login_processor_remotehost_ip"]      = "Der gespeicherte Hostname ist ni
 $_lang["login_processor_remote_ip"]          = "Sie können sich von dieser IP-Adresse nicht einloggen.";
 $_lang["login_processor_date"]               = "Sie wurden gesperrt und können sich nicht anmelden! Probieren Sie es später noch einmal!";
 $_lang["login_processor_captcha_config"]     = "Das Captcha ist falsch konfiguriert.";
+
+$_lang["dp_dayNames"]   = "['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']";
+$_lang["dp_monthNames"] = "['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Alles auswählen";
+$_lang["check_none"] = "Nichts auswählen";
+$_lang["check_toggle"] = "Auswahl umkehren";

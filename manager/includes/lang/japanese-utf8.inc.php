@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author eastbind
  * @author MEGU
@@ -852,7 +852,7 @@ $_lang["role_web_user_management"] = 'ウェブユーザー管理';
 $_lang["rss_url_news_default"] = 'http://feeds2.feedburner.com/modxjp';
 $_lang["rss_url_news_message"] = '管理画面トップの「MODX News」のフィードURL';
 $_lang["rss_url_news_title"] = 'RSS ニュースフィード';
-$_lang["rss_url_security_default"] = 'http://feeds2.feedburner.com/modxjpsec';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = '管理画面トップの「MODX Security」のフィードURL';
 $_lang["rss_url_security_title"] = 'RSS セキュリティ情報フィード';
 $_lang["run_module"] = 'モジュールの実行';
@@ -867,6 +867,8 @@ $_lang["search_criteria_content"] = '本文で検索';
 $_lang["search_criteria_content_msg"] = 'Find all Resources with the entered text in their content.';
 $_lang["search_criteria_id"] = 'IDで検索';
 $_lang["search_criteria_id_msg"] = 'Enter a Resource\'s ID to quickly locate that Resource.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'タイトルで検索';
 $_lang["search_criteria_longtitle_msg"] = 'Find all Resources with the entered text in their long title.';
 $_lang["search_criteria_title"] = 'リソース名で検索';
@@ -1203,6 +1205,7 @@ $_lang['email_method_mail'] = 'PHP mail() による機能';
 $_lang['email_method_smtp'] = 'SMTP サーバ';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP ホスト';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP ユーザ名';
 $_lang['smtp_password_title'] = 'SMTP パスワード';
 $_lang['smtp_port_title'] = 'SMTP ポート';
@@ -1276,3 +1279,11 @@ $_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back
 $_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
 $_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
 $_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Select all";
+$_lang["check_none"] = "Select none";
+$_lang["check_toggle"] = "Toggle selection";

@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Pontus Ågren (Pont)
  * @author Johnny Chadda
@@ -842,7 +842,7 @@ $_lang["role_web_user_management"] = 'Hantera webbanvändare';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Ange URL:en för MODX nyhetsflöde.';
 $_lang["rss_url_news_title"] = 'RSS nyhetsflöde';
-$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
+$_lang["rss_url_security_default"] = 'http://forums.modx.com/board.xml?board=295';
 $_lang["rss_url_security_message"] = 'Ange URL:en för MODX säkerhetsflöde.';
 $_lang["rss_url_security_title"] = 'RSS säkerhetsflöde';
 $_lang["run_module"] = 'Kör modul';
@@ -857,6 +857,8 @@ $_lang["search_criteria_content"] = 'Sök efter innehåll';
 $_lang["search_criteria_content_msg"] = 'Hitta samtliga resurser med söktexten i innehållet.';
 $_lang["search_criteria_id"] = 'Sök efter ID';
 $_lang["search_criteria_id_msg"] = 'Skriv resursens ID för att snabbt lokalisera resursen.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Sök efter lång titel';
 $_lang["search_criteria_longtitle_msg"] = 'Hitta alla resurser med söktexten i den långa titeln.';
 $_lang["search_criteria_title"] = 'Sök efter titel';
@@ -1193,6 +1195,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';
@@ -1266,3 +1269,11 @@ $_lang["login_processor_remotehost_ip"]      = "Ditt värdnamn pekar inte tillba
 $_lang["login_processor_remote_ip"]          = "Du får inte logga in från den här platsen.";
 $_lang["login_processor_date"]               = "Du får inte logga in just nu. Försök senare.";
 $_lang["login_processor_captcha_config"]     = "Captcha är inte korrekt konfigurerad.";
+
+$_lang["dp_dayNames"]   = "['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag']";
+$_lang["dp_monthNames"] = "['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Välj alla";
+$_lang["check_none"] = "Välj ingen";
+$_lang["check_toggle"] = "Växla val";
